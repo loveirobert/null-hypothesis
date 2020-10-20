@@ -1,6 +1,6 @@
 {
   "name": "null-hypothesis",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Tools for econometrics",
   "main": "index.js",
   "scripts": {
