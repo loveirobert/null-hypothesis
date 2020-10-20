@@ -13,6 +13,7 @@ module.exports = {
   },
   rules: {
     'max-len': [2, 150, 2],
+    'no-param-reassign': 0,
   },
   plugins: ['jest'],
 };
