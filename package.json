@@ -1,0 +1,22 @@
+{
+  "name": "null-hypothesis",
+  "version": "1.0.0",
+  "description": "Tools for econometrics",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loveirobert/null-hypothesis.git"
+  },
+  "keywords": [
+    "econometrics"
+  ],
+  "author": "Robert Lovei",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/loveirobert/null-hypothesis/issues"
+  },
+  "homepage": "https://github.com/loveirobert/null-hypothesis#readme"
+}
