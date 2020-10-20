@@ -3,10 +3,10 @@ const getSimpleReturns = (serie) => serie.reduce((p, n, i, src) => {
   return p;
 }, []);
 
-const getContinuouslyCompoundedReturns = (serie) => {
-  const newSerie = serie;
-  return newSerie;
-};
+const getContinuouslyCompoundedReturns = (serie) => serie.reduce((p, n, i, src) => {
+  if (i < src.length - 1) p[i] = 1 + Math.log10(src[i + 1] / n);
+  return p;
+}, []);
 
 module.exports = {
   getSimpleReturns,
