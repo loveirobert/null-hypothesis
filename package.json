@@ -4,7 +4,7 @@
   "description": "Tools for econometrics",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test"
+    "test": "jest --testPathPattern=test"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/loveirobert/null-hypothesis/issues"
   },
-  "homepage": "https://github.com/loveirobert/null-hypothesis#readme"
+  "homepage": "https://github.com/loveirobert/null-hypothesis#readme",
+  "devDependencies": {
+    "jest": "^26.6.0"
+  }
 }
