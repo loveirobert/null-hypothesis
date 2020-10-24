@@ -13,6 +13,7 @@ const {
   getLinearRegressionParameters,
   getErrors,
   getMse,
+  getSxx,
 } = require('../src/statistics');
 
 describe('Basic statistical functions', () => {
@@ -67,5 +68,14 @@ describe('Basic statistical functions', () => {
     const mse = getMse(modifiedCorrelationBaseValues, linearRegression);
     expect(mse).toBeGreaterThan(0);
     expect(mse).toBeLessThan(1);
+  });
+
+  test('Calculating sum of squares of the variable x', () => {
+    const modifiedCorrelationBaseValues = {
+      x: [...correlationBaseValues.x],
+      y: correlationBaseValues.y.map((y) => y + getRandom(1, 2)),
+    };
+    const sxx = getSxx(modifiedCorrelationBaseValues);
+    expect(sxx).toBe(10);
   });
 });

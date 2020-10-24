@@ -37,6 +37,11 @@ const getMse = (series, regression) => {
   return errors.reduce((p, n) => p + n ** 2, 0) / (series.x.length - 2);
 };
 
+const getSxx = (series) => {
+  const serieXAvg = getAverage(series.x);
+  return series.x.reduce((p, x) => p + (x - serieXAvg) ** 2, 0);
+};
+
 module.exports = {
   getAverage,
   getVariance,
@@ -44,4 +49,5 @@ module.exports = {
   getLinearRegressionParameters,
   getErrors,
   getMse,
+  getSxx,
 };
