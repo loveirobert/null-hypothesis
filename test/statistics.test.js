@@ -13,7 +13,6 @@ const {
   getLinearRegressionParameters,
   getErrors,
   getMse,
-  getSxx,
 } = require('../src/statistics');
 
 describe('Basic statistical functions', () => {
@@ -31,22 +30,26 @@ describe('Basic statistical functions', () => {
 
   test('Calculating linear regression parameters', () => {
     const {
-      a, b,
+      a, b, t0, acceptB,
     } = getLinearRegressionParameters(correlationBaseValues);
     expect(a).toBe(0);
     expect(b).toBe(1);
+    expect(t0).toBe(Infinity);
+    expect(acceptB).toBe(true);
   });
 
-  test('Calculating linear regression parameters', () => {
+  test('Calculating linear regression parameters with different interceptor', () => {
     const modifiedCorrelationBaseValues = {
       x: [...correlationBaseValues.x],
       y: correlationBaseValues.y.map((y) => y + 1),
     };
     const {
-      a, b,
+      a, b, t0, acceptB,
     } = getLinearRegressionParameters(modifiedCorrelationBaseValues);
     expect(a).toBe(1);
     expect(b).toBe(1);
+    expect(t0).toBe(Infinity);
+    expect(acceptB).toBe(true);
   });
 
   test('Calculating linear regression errors', () => {
@@ -70,12 +73,21 @@ describe('Basic statistical functions', () => {
     expect(mse).toBeLessThan(1);
   });
 
-  test('Calculating sum of squares of the variable x', () => {
+  test('Accepting slope (b) value', () => {
     const modifiedCorrelationBaseValues = {
       x: [...correlationBaseValues.x],
       y: correlationBaseValues.y.map((y) => y + getRandom(1, 2)),
     };
-    const sxx = getSxx(modifiedCorrelationBaseValues);
-    expect(sxx).toBe(10);
+    const linearRegression = getLinearRegressionParameters(modifiedCorrelationBaseValues);
+    expect(linearRegression.acceptB).toBe(true);
+  });
+
+  test('Accepting slope (b) value', () => {
+    const modifiedCorrelationBaseValues = {
+      x: [...correlationBaseValues.x],
+      y: correlationBaseValues.y.map((y) => y + getRandom(0, 1000)),
+    };
+    const linearRegression = getLinearRegressionParameters(modifiedCorrelationBaseValues);
+    expect(linearRegression.acceptB).toBe(false);
   });
 });

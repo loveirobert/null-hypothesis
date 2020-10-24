@@ -1,3 +1,7 @@
+const {
+  findTValue,
+} = require('./data/tValues');
+
 const getAverage = (serie) => serie.reduce((a, b) => (a + b)) / serie.length;
 
 const getVariance = (serie) => {
@@ -16,17 +20,6 @@ const getCovariance = (series) => {
   };
 };
 
-const getLinearRegressionParameters = (series) => {
-  const variance = getVariance(series.x);
-  const { covariance, serieXAvg, serieYAvg } = getCovariance(series);
-  const b = covariance / variance;
-  const a = serieYAvg - b * serieXAvg;
-  return {
-    b,
-    a,
-  };
-};
-
 const getErrors = (series, regression) => {
   const { a, b } = regression;
   return series.x.map((x, i) => series.y[i] - (a + x * b));
@@ -37,9 +30,27 @@ const getMse = (series, regression) => {
   return errors.reduce((p, n) => p + n ** 2, 0) / (series.x.length - 2);
 };
 
-const getSxx = (series) => {
-  const serieXAvg = getAverage(series.x);
-  return series.x.reduce((p, x) => p + (x - serieXAvg) ** 2, 0);
+const getLinearRegressionParameters = (series, confidence = 0.01) => {
+  const variance = getVariance(series.x);
+  const { covariance, serieXAvg, serieYAvg } = getCovariance(series);
+  const b = covariance / variance;
+  const a = serieYAvg - b * serieXAvg;
+
+  const regression = {
+    b,
+    a,
+  };
+
+  const t0Input = getMse(series, regression) / variance;
+  const t0 = t0Input === 0 ? Infinity : b / ((t0Input) ** (0.5));
+
+  const tValue = findTValue('doubleSided', confidence, series.x.length - 2);
+
+  return {
+    t0,
+    acceptB: t0 > tValue,
+    ...regression,
+  };
 };
 
 module.exports = {
@@ -49,5 +60,4 @@ module.exports = {
   getLinearRegressionParameters,
   getErrors,
   getMse,
-  getSxx,
 };
