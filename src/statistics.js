@@ -32,10 +32,16 @@ const getErrors = (series, regression) => {
   return series.x.map((x, i) => series.y[i] - (a + x * b));
 };
 
+const getMse = (series, regression) => {
+  const errors = getErrors(series, regression);
+  return errors.reduce((p, n) => p + n ** 2, 0) / (series.x.length - 2);
+};
+
 module.exports = {
   getAverage,
   getVariance,
   getCovariance,
   getLinearRegressionParameters,
   getErrors,
+  getMse,
 };

@@ -12,6 +12,7 @@ const {
   getCovariance,
   getLinearRegressionParameters,
   getErrors,
+  getMse,
 } = require('../src/statistics');
 
 describe('Basic statistical functions', () => {
@@ -55,5 +56,16 @@ describe('Basic statistical functions', () => {
     const linearRegression = getLinearRegressionParameters(modifiedCorrelationBaseValues);
     const errors = getErrors(modifiedCorrelationBaseValues, linearRegression);
     errors.forEach((e) => expect(e).not.toBe(0));
+  });
+
+  test('Calculating linear regression mean squared error', () => {
+    const modifiedCorrelationBaseValues = {
+      x: [...correlationBaseValues.x],
+      y: correlationBaseValues.y.map((y) => y + getRandom(1, 2)),
+    };
+    const linearRegression = getLinearRegressionParameters(modifiedCorrelationBaseValues);
+    const mse = getMse(modifiedCorrelationBaseValues, linearRegression);
+    expect(mse).toBeGreaterThan(0);
+    expect(mse).toBeLessThan(1);
   });
 });
