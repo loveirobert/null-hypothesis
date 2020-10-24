@@ -3,10 +3,15 @@ const {
 } = require('./data/static');
 
 const {
+  getRandom,
+} = require('./utils/helpers');
+
+const {
   getAverage,
   getVariance,
   getCovariance,
   getLinearRegressionParameters,
+  getErrors,
 } = require('../src/statistics');
 
 describe('Basic statistical functions', () => {
@@ -40,5 +45,15 @@ describe('Basic statistical functions', () => {
     } = getLinearRegressionParameters(modifiedCorrelationBaseValues);
     expect(a).toBe(1);
     expect(b).toBe(1);
+  });
+
+  test('Calculating linear regression errors', () => {
+    const modifiedCorrelationBaseValues = {
+      x: [...correlationBaseValues.x],
+      y: correlationBaseValues.y.map((y) => y + getRandom(1, 2)),
+    };
+    const linearRegression = getLinearRegressionParameters(modifiedCorrelationBaseValues);
+    const errors = getErrors(modifiedCorrelationBaseValues, linearRegression);
+    errors.forEach((e) => expect(e).not.toBe(0));
   });
 });

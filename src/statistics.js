@@ -27,9 +27,15 @@ const getLinearRegressionParameters = (series) => {
   };
 };
 
+const getErrors = (series, regression) => {
+  const { a, b } = regression;
+  return series.x.map((x, i) => series.y[i] - (a + x * b));
+};
+
 module.exports = {
   getAverage,
   getVariance,
   getCovariance,
   getLinearRegressionParameters,
+  getErrors,
 };
