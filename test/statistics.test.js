@@ -13,11 +13,18 @@ const {
   getLinearRegressionParameters,
   getErrors,
   getMse,
+  getLogAverage,
+  getLogCovariance,
+  getLogarithmicRegressionParameters,
 } = require('../src/statistics');
 
 describe('Basic statistical functions', () => {
   test('Calculating average', () => {
     expect(getAverage([1, 2, 3])).toBe(2);
+  });
+
+  test('Calculating log average', () => {
+    expect(getLogAverage([1, 2, 3])).toBe(0.930586489742685);
   });
 
   test('Calculating variance', () => {
@@ -28,6 +35,10 @@ describe('Basic statistical functions', () => {
     expect(getCovariance(correlationBaseValues).covariance).toBe(10);
   });
 
+  test('Calculating log covariance', () => {
+    expect(getLogCovariance(correlationBaseValues).covariance).toBe(3.912023005428146);
+  });
+
   test('Calculating linear regression parameters', () => {
     const {
       a, b, t0, acceptB,
@@ -36,6 +47,16 @@ describe('Basic statistical functions', () => {
     expect(b).toBe(1);
     expect(t0).toBe(Infinity);
     expect(acceptB).toBe(true);
+  });
+
+  test('Calculating log regression parameters', () => {
+    const {
+      a, b, t0, acceptB,
+    } = getLogarithmicRegressionParameters(correlationBaseValues);
+    expect(b).toBe(2.1548040409852938);
+    expect(a).toBe(0.5058178810968452);
+    expect(t0).toBe(0.523864618960621);
+    expect(acceptB).toBe(false);
   });
 
   test('Calculating linear regression parameters with different interceptor', () => {

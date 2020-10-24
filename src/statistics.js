@@ -4,15 +4,33 @@ const {
 
 const getAverage = (serie) => serie.reduce((a, b) => (a + b)) / serie.length;
 
+const getLogAverage = (serie) => serie.reduce((a, b) => (a + Math.log(b))) / serie.length;
+
 const getVariance = (serie) => {
   const serieAvg = getAverage(serie);
   return serie.reduce((p, n) => p + (n - serieAvg) ** 2, 0);
+};
+
+const getLogVariance = (serie) => {
+  const serieLogAvg = getLogAverage(serie);
+  return serie.reduce((p, n) => p + (Math.log(n) - serieLogAvg) ** 2, 0);
 };
 
 const getCovariance = (series) => {
   const serieXAvg = getAverage(series.x);
   const serieYAvg = getAverage(series.y);
   const covariance = series.x.reduce((p, n, i) => p + (n - serieXAvg) * (series.y[i] - serieYAvg), 0);
+  return {
+    covariance,
+    serieXAvg,
+    serieYAvg,
+  };
+};
+
+const getLogCovariance = (series) => {
+  const serieXAvg = getLogAverage(series.x);
+  const serieYAvg = getAverage(series.y);
+  const covariance = series.x.reduce((p, n, i) => p + (Math.log(n) - serieXAvg) * (series.y[i] - serieYAvg), 0);
   return {
     covariance,
     serieXAvg,
@@ -53,6 +71,29 @@ const getLinearRegressionParameters = (series, confidence = 0.01) => {
   };
 };
 
+const getLogarithmicRegressionParameters = (series, confidence = 0.01) => {
+  const variance = getLogVariance(series.x);
+  const { covariance, serieXAvg, serieYAvg } = getLogCovariance(series);
+  const b = covariance / variance;
+  const a = serieYAvg - b * serieXAvg;
+
+  const regression = {
+    b,
+    a,
+  };
+
+  const t0Input = getMse(series, regression) / variance;
+  const t0 = t0Input === 0 ? Infinity : b / ((t0Input) ** (0.5));
+
+  const tValue = findTValue('doubleSided', confidence, series.x.length - 2);
+
+  return {
+    t0,
+    acceptB: t0 > tValue,
+    ...regression,
+  };
+};
+
 module.exports = {
   getAverage,
   getVariance,
@@ -60,4 +101,7 @@ module.exports = {
   getLinearRegressionParameters,
   getErrors,
   getMse,
+  getLogAverage,
+  getLogCovariance,
+  getLogarithmicRegressionParameters,
 };
